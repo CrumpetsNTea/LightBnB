@@ -1,14 +1,11 @@
--- DELETE FROM users WHERE name='Timmy James';
--- DELETE FROM users WHERE name='Davy Crockett';
--- DELETE FROM users WHERE name='Bruce Wayne';
--- DELETE FROM properties WHERE title='Speed Lamp';
--- DELETE FROM properties WHERE title='Yellow Yurt';
--- DELETE FROM properties WHERE title='BatCave';
--- DELETE FROM reservations WHERE start_date='2021-09-11';
--- DELETE FROM reservations WHERE start_date='2021-07-06';
--- DELETE FROM reservations WHERE start_date='2021-05-05';
--- DELETE FROM property_reviews WHERE message='message';
+-- RESETS OUR TABLES
+-- DELETE FROM users;
+-- DELETE FROM properties;
+-- DELETE FROM reservations;
+-- DELETE FROM property_reviews;
 
+-- HAD TO IMPLEMENT THESE TO RESET THE id OF EACH TABLE AS IT WAS CAUSING ERRORS SINCE I HAD 
+-- SERIAL PRIMARY KEY WAS NOT STARTING FROM 1 DUE TO ERRORS
 -- ALTER SEQUENCE users_id_seq RESTART 1
 -- ALTER SEQUENCE properties_id_seq RESTART 1
 -- ALTER SEQUENCE reservations_id_seq RESTART 1
