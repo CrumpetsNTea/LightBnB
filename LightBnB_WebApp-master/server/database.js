@@ -81,11 +81,12 @@ exports.addUser = addUser;
  * @return {Promise<[{}]>} A promise to the reservations.
  */
 const getAllReservations = (guest_id, limit = 10) => {
+  const queryString = `SELECT * FROM reservations
+  JOIN properties ON properties.id = property_id
+  WHERE guest_id = $1
+  LIMIT $2`;
   return pool
-    .query(`SELECT * FROM reservations
-            JOIN properties ON properties.id = property_id
-            WHERE guest_id = $1
-            LIMIT $2`, [guest_id, limit])
+    .query(queryString, [guest_id, limit])
     .then((result) => {
       return result.rows;
     })
