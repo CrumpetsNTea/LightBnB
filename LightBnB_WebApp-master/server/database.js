@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const properties = require('./json/properties.json');
 const users = require('./json/users.json');
 const { Pool } = require('pg');
@@ -18,7 +19,7 @@ const pool = new Pool({
  
 const getUserWithEmail = (email) => {
   return pool
-    .query(`SELECT * FROM users WHERE email = $1;`, [`${email}`])
+    .query(`SELECT * FROM users WHERE email = $1;`, [email])
     .then((result) => {
       console.log(result.rows);
       if (!result) {
@@ -36,7 +37,7 @@ exports.getUserWithEmail = getUserWithEmail;
  */
 const getUserWithId = (id) => {
   return pool
-    .query(`SELECT * FROM users WHERE id = $1;`, [`${id}`])
+    .query(`SELECT * FROM users WHERE id = $1;`, [id])
     .then((result) => {
       console.log(result.rows);
       if (!result) {
@@ -76,8 +77,18 @@ exports.addUser = addUser;
  * @param {string} guest_id The id of the user.
  * @return {Promise<[{}]>} A promise to the reservations.
  */
-const getAllReservations = function(guest_id, limit = 10) {
-  return getAllProperties(null, 2);
+const getAllReservations = (guest_id, limit = 10) => {
+  return pool
+    .query(`SELECT * FROM reservations
+            JOIN properties ON properties.id = property_id
+            WHERE guest_id = $1
+            LIMIT $2`, [guest_id, limit])
+    .then((result) => {
+      return result.rows;
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
 };
 exports.getAllReservations = getAllReservations;
 
