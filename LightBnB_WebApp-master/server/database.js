@@ -10,17 +10,16 @@ const pool = new Pool({
   database: 'lightbnb'
 });
 
-// const connect = pool.connect();
-
-// connect
-//   .then(console.log('Connected'));
-
 /// Users
- 
+
+/**
+ * Get a single user from the database given their email.
+ */
 const getUserWithEmail = (email) => {
   const queryString = `SELECT * FROM users WHERE email = $1;`;
+  const queryParams = [email];
   return pool
-    .query(queryString, [email])
+    .query(queryString, queryParams)
     .then((result) => {
       console.log(result.rows);
       if (!result) {
@@ -38,8 +37,9 @@ exports.getUserWithEmail = getUserWithEmail;
  */
 const getUserWithId = (id) => {
   const queryString = `SELECT * FROM users WHERE id = $1;`;
+  const queryParams = [id];
   return pool
-    .query(queryString, [id])
+    .query(queryString, queryParams)
     .then((result) => {
       console.log(result.rows);
       if (!result) {
@@ -55,15 +55,14 @@ exports.getUserWithId = getUserWithId;
 
 /**
  * Add a new user to the database.
- * @param {{name: string, password: string, email: string}} user
- * @return {Promise<{}>} A promise to the user.
  */
 const addUser = (user) => {
   const queryString = `INSERT INTO users (name, email, password) 
                         VALUES ($1, $2, $3)
                         RETURNING *`;
+  const queryParams = [user.name, user.email, user.password];
   return pool
-    .query(queryString,[user.name, user.email, user.password])
+    .query(queryString, queryParams)
     .then((result) => {
       return result.rows;
     })
@@ -77,16 +76,15 @@ exports.addUser = addUser;
 
 /**
  * Get all reservations for a single user.
- * @param {string} guest_id The id of the user.
- * @return {Promise<[{}]>} A promise to the reservations.
  */
 const getAllReservations = (guest_id, limit = 10) => {
   const queryString = `SELECT * FROM reservations
   JOIN properties ON properties.id = property_id
   WHERE guest_id = $1
   LIMIT $2`;
+  const queryParams = [guest_id, limit];
   return pool
-    .query(queryString, [guest_id, limit])
+    .query(queryString, queryParams)
     .then((result) => {
       return result.rows;
     })
@@ -97,7 +95,9 @@ const getAllReservations = (guest_id, limit = 10) => {
 exports.getAllReservations = getAllReservations;
 
 /// Properties
-
+/**
+ * Get all properties with varying search parameters functionality
+ */
 const getAllProperties = (options, limit = 5) => {
   const queryParams = [];
   // 2
